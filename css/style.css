@@ -48,9 +48,58 @@ nav { display: flex; justify-content: space-between; align-items: center; }
 .sequence-msg { padding: 5px 10px; background: #e3f2fd; border-radius: 5px; font-size: 0.85rem; margin-left: 10px; }
 
 /* 代码块 */
-pre { background: #1a1a2e; color: #e0e0e0; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; }
-code { font-family: 'Fira Code', monospace; }
+pre { background: #1a1a2e; color: #e0e0e0; padding: 1.5rem; border-radius: 8px; margin: 1rem 0; position: relative; }
+code { font-family: 'Fira Code', 'Consolas', monospace; }
 .inline-code { background: #f0f0f0; padding: 2px 8px; border-radius: 4px; font-family: monospace; }
+
+/* 代码块语法高亮 - Prism.js 风格 */
+pre .token.comment,
+pre .token.prolog,
+pre .token.doctype,
+pre .token.cdata { color: #6a9955; }
+pre .token.punctuation { color: #d4d4d4; }
+pre .token.property,
+pre .token.tag,
+pre .token.boolean,
+pre .token.number,
+pre .token.constant,
+pre .token.symbol { color: #b5cea8; }
+pre .token.selector,
+pre .token.attr-name,
+pre .token.string,
+pre .token.char,
+pre .token.builtin { color: #ce9178; }
+pre .token.operator,
+pre .token.entity,
+pre .token.url,
+pre .language-css .token.string,
+pre .token.variable { color: #d4d4d4; }
+pre .token.atrule,
+pre .token.attr-value,
+pre .token.function { color: #dcdcaa; }
+pre .token.keyword { color: #569cd6; }
+pre .token.regex,
+pre .token.important { color: #d16969; }
+pre .token.important,
+pre .token.bold { font-weight: bold; }
+pre .token.italic { font-style: italic; }
+pre .token.entity { cursor: help; }
+
+/* 代码块折叠功能 */
+.code-header { display: flex; justify-content: space-between; align-items: center; background: #2d2d44; padding: 8px 15px; margin: -1rem -1rem 1rem -1rem; border-radius: 8px 8px 0 0; cursor: pointer; }
+.code-header:hover { background: #3d3d5c; }
+.code-title { color: #00d4ff; font-size: 0.85rem; font-weight: 500; }
+.code-lang { color: #888; font-size: 0.75rem; margin-left: 10px; }
+.code-toggle { color: #00d4ff; font-size: 0.85rem; }
+.code-toggle.collapsed { transform: rotate(-90deg); }
+pre.collapsed { max-height: 60px; overflow: hidden; }
+pre.collapsed .code-header { border-radius: 8px; }
+
+/* 代码行号 */
+pre.line-numbers { padding-left: 3.5rem; position: relative; }
+pre.line-numbers .line-numbers-rows { position: absolute; pointer-events: none; top: 1rem; left: 0; width: 3rem; letter-spacing: -1px; border-right: 1px solid #444; }
+pre.line-numbers-rows > span { display: block; counter-increment: linenumber; }
+pre.line-numbers-rows > span:before { counter-increment: linenumber; content: counter(linenumber); color: #555; display: block; padding-right: 0.8rem; text-align: right; }
 
 /* 标签页 */
 .tabs { display: flex; gap: 5px; margin-bottom: 1rem; }
