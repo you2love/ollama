@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>安装指南 - Ollama 知识手册</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo"><a href="index.html" style="color:white;text-decoration:none"><span>◈</span> Ollama 手册</a></div>
+                <ul class="nav-links">
+                    <li><a href="index.html">首页</a></li>
+                    <li><a href="models.html">模型管理</a></li>
+                    <li><a href="api.html">API 使用</a></li>
+                    <li><a href="examples.html">实战案例</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero" style="padding: 2rem 0;">
+        <div class="container">
+            <h1>⚙️ 安装指南</h1>
+            <p>各平台安装步骤与配置优化</p>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">🖥️ macOS 安装</h2>
+            <div class="card">
+                <h3>推荐方式：Homebrew</h3>
+                <pre>brew install ollama</pre>
+                <p style="margin-top:1rem">安装完成后自动启动服务，监听 11434 端口。</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">🐧 Linux 安装</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>curl 安装脚本</h3>
+                    <pre>curl -fsSL https://ollama.com/install.sh | sh</pre>
+                </div>
+                <div class="card">
+                    <h3>手动下载</h3>
+                    <pre>wget https://ollama.com/download/ollama-linux-amd64
+sudo mv ollama-linux-amd64 /usr/local/bin/ollama
+sudo chmod +x /usr/local/bin/ollama</pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">🪟 Windows 安装</h2>
+            <div class="card">
+                <h3>Microsoft Store / 安装包</h3>
+                <ul>
+                    <li>方式一：从 Microsoft Store 搜索 "Ollama" 安装</li>
+                    <li>方式二：下载安装包 ollama-windows-amd64.exe</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">🔧 验证安装</h2>
+            <div class="card">
+                <pre># 查看版本
+ollama --version
+
+# 查看服务状态
+ollama list
+
+# 启动服务（如未自动启动）
+ollama serve</pre>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">💻 服务器架构</h2>
+            <div class="diagram">
+                <div class="diagram-title">Ollama 服务架构</div>
+                <div class="flowchart">
+                    <div class="flow-node start">客户端</div>
+                    <span class="flow-arrow">HTTP</span>
+                    <div class="flow-node process">Ollama Server</div>
+                    <span class="flow-arrow">IPC</span>
+                    <div class="flow-node process">LLM Runner</div>
+                    <span class="flow-arrow">GPU</span>
+                    <div class="flow-node end">推理结果</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2024 Ollama 知识手册</p>
+        </div>
+    </footer>
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API 使用 - Ollama 知识手册</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo"><a href="index.html" style="color:white;text-decoration:none"><span>◈</span> Ollama 手册</a></div>
+                <ul class="nav-links">
+                    <li><a href="index.html">首页</a></li>
+                    <li><a href="install.html">安装指南</a></li>
+                    <li><a href="models.html">模型管理</a></li>
+                    <li><a href="examples.html">实战案例</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero" style="padding: 2rem 0;">
+        <div class="container">
+            <h1>🔌 API 使用</h1>
+            <p>REST API 与 SDK 集成开发</p>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">🌐 REST API 概览</h2>
+            <table>
+                <tr>
+                    <th>端点</th>
+                    <th>方法</th>
+                    <th>说明</th>
+                </tr>
+                <tr>
+                    <td>/api/generate</td>
+                    <td>POST</td>
+                    <td>生成文本（完整回答）</td>
+                </tr>
+                <tr>
+                    <td>/api/chat</td>
+                    <td>POST</td>
+                    <td>对话模式（流式输出）</td>
+                </tr>
+                <tr>
+                    <td>/api/tags</td>
+                    <td>GET</td>
+                    <td>获取已下载模型列表</td>
+                </tr>
+                <tr>
+                    <td>/api/show</td>
+                    <td>POST</td>
+                    <td>查看模型信息</td>
+                </tr>
+            </table>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">💬 对话 API (chat)</h2>
+            <div class="card">
+                <h3>请求示例</h3>
+                <pre>curl -X POST http://localhost:11434/api/chat \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "llama3.2",
+    "messages": [
+      {"role": "user", "content": "什么是 Ollama?"}
+    ],
+    "stream": false
+  }'</pre>
+            </div>
+            <div class="card" style="margin-top:1rem">
+                <h3>响应示例</h3>
+                <pre>{
+  "model": "llama3.2",
+  "message": {
+    "role": "assistant",
+    "content": "Ollama 是一个开源的大语言模型运行平台..."
+  },
+  "done": true
+}</pre>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">⚡ 流式响应</h2>
+            <div class="card">
+                <h3>流式调用</h3>
+                <pre>curl -X POST http://localhost:11434/api/chat \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "llama3.2",
+    "messages": [{"role": "user", "content": "讲个笑话"}],
+    "stream": true
+  }'</pre>
+                <p style="margin-top:1rem">设置 <code>stream: true</code> 开启 SSE 流式输出，逐字返回结果。</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">🐍 Python SDK</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>安装</h3>
+                    <pre>pip install ollama</pre>
+                </div>
+                <div class="card">
+                    <h3>基本使用</h3>
+                    <pre>import ollama
+
+response = ollama.chat(
+    model='llama3.2',
+    messages=[{'role': 'user', 'content': '你好'}]
+)
+print(response['message']['content'])</pre>
+                </div>
+                <div class="card">
+                    <h3>流式输出</h3>
+                    <pre>import ollama
+
+for chunk in ollama.chat(
+    model='llama3.2',
+    messages=[{'role': 'user', 'content': '继续'}],
+    stream=True
+):
+    print(chunk['message']['content'], end='')</pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">📡 API 交互时序图</h2>
+            <div class="diagram">
+                <div class="sequence-diagram">
+                    <div class="sequence-row">
+                        <div class="sequence-label">Client</div>
+                        <div class="sequence-line"><div class="sequence-dot" style="background:#667eea;left:0"></div></div>
+                        <div class="sequence-msg">POST /api/chat</div>
+                    </div>
+                    <div class="sequence-row">
+                        <div class="sequence-label">Ollama</div>
+                        <div class="sequence-line"><div class="sequence-dot" style="background:#11998e;left:30%"></div></div>
+                        <div class="sequence-msg">验证请求</div>
+                    </div>
+                    <div class="sequence-row">
+                        <div class="sequence-label">Model</div>
+                        <div class="sequence-line"><div class="sequence-dot" style="background:#eb3349;left:50%"></div></div>
+                        <div class="sequence-msg">LLM 推理</div>
+                    </div>
+                    <div class="sequence-row">
+                        <div class="sequence-label">Ollama</div>
+                        <div class="sequence-line"><div class="sequence-dot" style="background:#f093fb;left:70%"></div></div>
+                        <div class="sequence-msg">返回结果</div>
+                    </div>
+                    <div class="sequence-row">
+                        <div class="sequence-label">Client</div>
+                        <div class="sequence-line"><div class="sequence-dot" style="background:#667eea;left:100%"></div></div>
+                        <div class="sequence-msg">处理响应</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">🟢 Node.js SDK</h2>
+            <div class="card">
+                <pre>npm install ollama</pre>
+                <pre style="margin-top:1rem">const { Ollama } = require('ollama')
+const ollama = new Ollama({ host: 'http://localhost:11434' })
+
+const response = await ollama.chat({
+    model: 'llama3.2',
+    messages: [{ role: 'user', content: 'Hello' }]
+})
+console.log(response.message.content)</pre>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2024 Ollama 知识手册</p>
+        </div>
+    </footer>
+    <script src="js/main.js"></script>
+</body>
+</html>

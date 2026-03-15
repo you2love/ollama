@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ollama 知识手册 - 程序员指南</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo"><span>◈</span> Ollama 手册</div>
+                <ul class="nav-links">
+                    <li><a href="#start">快速开始</a></li>
+                    <li><a href="install.html">安装指南</a></li>
+                    <li><a href="models.html">模型管理</a></li>
+                    <li><a href="api.html">API 使用</a></li>
+                    <li><a href="examples.html">实战案例</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>🤖 Ollama 知识手册</h1>
+            <p>面向程序员的本地大模型部署与开发指南</p>
+            <a href="#start" class="btn">开始学习 →</a>
+        </div>
+    </section>
+
+    <section id="start" class="section">
+        <div class="container">
+            <h2 class="section-title">📚 内容概览</h2>
+            <div class="grid">
+                <div class="card">
+                    <div class="card-icon">📦</div>
+                    <h3>快速开始</h3>
+                    <p>了解 Ollama 是什么，核心概念，以及如何快速运行第一个模型。</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">⚙️</div>
+                    <h3>安装指南</h3>
+                    <p>macOS、Linux、Windows 各平台安装步骤，配置优化。</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🧠</div>
+                    <h3>模型管理</h3>
+                    <p>模型下载、列表、删除、自定义模型文件 (Modelfile)。</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🔌</div>
+                    <h3>API 使用</h3>
+                    <p>REST API 详解、Python/Node.js SDK、接口调用示例。</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">💻</div>
+                    <h3>实战案例</h3>
+                    <p>企业知识库、代码助手、智能客服等真实场景实践。</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🔧</div>
+                    <h3>性能优化</h3>
+                    <p>GPU 加速、内存优化、多模型部署策略。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">🔄 Ollama 工作流程</h2>
+            <div class="diagram">
+                <div class="flowchart">
+                    <div class="flow-node start">用户请求</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-node process">Ollama 服务</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-node process">加载模型</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-node process">LLM 推理</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-node end">返回结果</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">⚡ 快速命令一览</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>�_DOWNLOAD 下载模型</h3>
+                    <pre>ollama pull llama3.2
+ollama pull qwen2.5</pre>
+                </div>
+                <div class="card">
+                    <h3>▶️ 运行模型</h3>
+                    <pre>ollama run llama3.2
+ollama run qwen2.5</pre>
+                </div>
+                <div class="card">
+                    <h3>📋 模型列表</h3>
+                    <pre>ollama list
+ollama ps</pre>
+                </div>
+                <div class="card">
+                    <h3>🗑️ 删除模型</h3>
+                    <pre>ollama rm llama3.2</pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2024 Ollama 知识手册 | 程序员本地大模型部署指南</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

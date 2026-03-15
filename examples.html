@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实战案例 - Ollama 知识手册</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo"><a href="index.html" style="color:white;text-decoration:none"><span>◈</span> Ollama 手册</a></div>
+                <ul class="nav-links">
+                    <li><a href="index.html">首页</a></li>
+                    <li><a href="install.html">安装指南</a></li>
+                    <li><a href="models.html">模型管理</a></li>
+                    <li><a href="api.html">API 使用</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero" style="padding: 2rem 0;">
+        <div class="container">
+            <h1>💻 实战案例</h1>
+            <p>真实业务场景与最佳实践</p>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">🧠 场景一：本地知识库问答</h2>
+            <div class="diagram">
+                <div class="diagram-title">RAG 架构流程</div>
+                <div class="flowchart">
+                    <div class="flow-node start">文档</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-node process">文本分割</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-node process">向量化</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-node process">向量库</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-node process">检索</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-node process">LLM 生成</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-node end">答案</div>
+                </div>
+            </div>
+            <div class="card">
+                <h3>核心代码</h3>
+                <pre>import ollama
+
+def rag_query(query, docs):
+    # 1. 将查询向量化（需 embedding 模型）
+    embed = ollama.embeddings(model='nomic-embed-text', prompt=query)
+    
+    # 2. 向量相似度检索（简化版）
+    relevant_docs = retrieve_similar(embed, docs)
+    
+    # 3. 构建上下文
+    context = "\n\n".join(relevant_docs)
+    prompt = f"基于以下资料回答问题：\n\n{context}\n\n问题：{query}"
+    
+    # 4. LLM 生成
+    response = ollama.chat(model='llama3.2', messages=[
+        {'role': 'user', 'content': prompt}
+    ])
+    return response['message']['content']</pre>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">💻 场景二：代码助手</h2>
+            <div class="card">
+                <h3>Python 代码审查</h3>
+                <pre>import ollama
+
+def review_code(code):
+    response = ollama.chat(
+        model='llama3.2',
+        messages=[{
+            'role': 'user',
+            'content': f'''请审查以下 Python 代码，指出问题并提供改进建议：
+            
+```{python}
+{code}
+```
+
+审查要点：
+1. 代码规范
+2. 潜在 bug
+3. 性能优化
+4. 安全问题'''
+        }]
+    )
+    return response['message']['content']
+
+# 使用示例
+code = '''
+def get_user(id):
+    return db.query(f"SELECT * FROM users WHERE id = {id}")
+'''
+print(review_code(code))</pre>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">🤖 场景三：智能客服机器人</h2>
+            <div class="diagram">
+                <div class="diagram-title">对话系统架构</div>
+                <div class="flowchart">
+                    <div class="flow-node start">用户</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-node process">API 网关</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-node process">意图识别</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-node decision">匹配?</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-node process">知识库</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-node end">回答</div>
+                </div>
+            </div>
+            <div class="card">
+                <h3>对话管理实现</h3>
+                <pre>import ollama
+
+class ChatBot:
+    def __init__(self):
+        self.system_prompt = """你是一个客服助手，负责回答用户关于产品的问题。
+        请保持友好、专业，使用户满意。"""
+        self.conversation = [{'role': 'system', 'content': self.system_prompt}]
+    
+    def chat(self, user_input):
+        self.conversation.append({'role': 'user', 'content': user_input})
+        
+        response = ollama.chat(
+            model='qwen2.5',
+            messages=self.conversation
+        )
+        
+        reply = response['message']['content']
+        self.conversation.append({'role': 'assistant', 'content': reply})
+        return reply
+    
+    def reset(self):
+        self.conversation = [{'role': 'system', 'content': self.system_prompt}]
+
+# 使用
+bot = ChatBot()
+while True:
+    user_input = input("你: ")
+    if user_input.lower() in ['exit', 'quit']:
+        break
+    print("助手:", bot.chat(user_input))</pre>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">🚀 场景四：批量文档处理</h2>
+            <div class="card">
+                <h3>批量摘要生成</h3>
+                <pre>import ollama
+from concurrent.futures import ThreadPoolExecutor
+
+def summarize_document(text):
+    prompt = f"请用 100 字以内概括以下内容：\n\n{text[:1000]}"
+    response = ollama.chat(
+        model='llama3.2',
+        messages=[{'role': 'user', 'content': prompt}]
+    )
+    return response['message']['content']
+
+def batch_summarize(documents):
+    with ThreadPoolExecutor(max_workers=3) as executor:
+        summaries = list(executor.map(summarize_document, documents))
+    return summaries
+
+# 使用
+docs = [doc1, doc2, doc3, ...]
+results = batch_summarize(docs)</pre>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">⚡ 性能优化技巧</h2>
+            <table>
+                <tr>
+                    <th>优化项</th>
+                    <th>方法</th>
+                    <th>效果</th>
+                </tr>
+                <tr>
+                    <td>GPU 加速</td>
+                    <td>确认 CUDA/Metal 可用</td>
+                    <td>推理速度 10x+</td>
+                </tr>
+                <tr>
+                    <td>模型量化</td>
+                    <td>使用 Q4_0, Q5_1 量化版本</td>
+                    <td>内存减少 50%+</td>
+                </tr>
+                <tr>
+                    <td>批处理</td>
+                    <td>合并多个请求</td>
+                    <td>吞吐量提升</td>
+                </tr>
+                <tr>
+                    <td>缓存</td>
+                    <td>热门结果缓存</td>
+                    <td>响应时间减少</td>
+                </tr>
+            </table>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2024 Ollama 知识手册</p>
+        </div>
+    </footer>
+    <script src="js/main.js"></script>
+</body>
+</html>
