@@ -161,27 +161,196 @@ ollama pull granite4</pre>
 
     <section class="section">
         <div class="container">
-            <h2 class="section-title">⚙️ 自定义模型 (Modelfile)</h2>
-            <div class="card">
-                <h3>创建自定义提示词</h3>
-                <pre># 创建 Modelfile
-FROM qwen3
+            <h2 class="section-title">⚙️ Modelfile 详细介绍</h2>
+            
+            <div class="card" style="margin-bottom: 1.5rem;">
+                <h3>📖 什么是 Modelfile</h3>
+                <p>Modelfile 是 Ollama 的模型配置文件，它允许你<strong>自定义模型行为</strong>、<strong>调整推理参数</strong>、<strong>注入系统提示词</strong>，无需重新训练模型即可创建专属的 AI 助手。</p>
+            </div>
 
+            <div class="grid" style="margin-bottom: 1.5rem;">
+                <div class="card">
+                    <h3>🎯 为什么要引入 Modelfile</h3>
+                    <ul>
+                        <li><strong>定制行为</strong>：让模型扮演特定角色（客服、代码助手、翻译官等）</li>
+                        <li><strong>调整输出</strong>：控制创造力、响应长度、格式等</li>
+                        <li><strong>知识注入</strong>：内置专业知识库，无需 RAG</li>
+                        <li><strong>可复用</strong>：一次配置，随时加载使用</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>⚡ 典型使用场景</h3>
+                    <ul>
+                        <li>企业内部知识库助手</li>
+                        <li>代码审查 / 编写专家</li>
+                        <li>特定领域顾问（医疗、法律、金融）</li>
+                        <li>翻译、摘要、写作助手</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card" style="margin-bottom: 1.5rem;">
+                <h3>📋 Modelfile 参数详解</h3>
+                <table>
+                    <tr>
+                        <th>参数</th>
+                        <th>说明</th>
+                        <th>取值范围</th>
+                        <th>默认值</th>
+                    </tr>
+                    <tr>
+                        <td>FROM</td>
+                        <td>基础模型</td>
+                        <td>模型名称</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>SYSTEM</td>
+                        <td>系统提示词（模型角色设定）</td>
+                        <td>任意文本</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>PARAMETER temperature</td>
+                        <td>随机性：越高越有创意，越低越确定性</td>
+                        <td>0.0 - 2.0</td>
+                        <td>0.8</td>
+                    </tr>
+                    <tr>
+                        <td>PARAMETER top_p</td>
+                        <td>核采样：控制词汇选择范围</td>
+                        <td>0.0 - 1.0</td>
+                        <td>0.9</td>
+                    </tr>
+                    <tr>
+                        <td>PARAMETER top_k</td>
+                        <td>限制最高概率词数量</td>
+                        <td>1 - 100</td>
+                        <td>40</td>
+                    </tr>
+                    <tr>
+                        <td>PARAMETER num_ctx</td>
+                        <td>上下文窗口大小</td>
+                        <td>128 - 8192</td>
+                        <td>2048</td>
+                    </tr>
+                    <tr>
+                        <td>PARAMETER num_gpu</td>
+                        <td>GPU 层数（-1 自动）</td>
+                        <td>-1 或正整数</td>
+                        <td>-1</td>
+                    </tr>
+                    <tr>
+                        <td>PARAMETER repeat_penalty</td>
+                        <td>重复惩罚：减少重复输出</td>
+                        <td>0.0 - 2.0</td>
+                        <td>1.1</td>
+                    </tr>
+                    <tr>
+                        <td>PARAMETER seed</td>
+                        <td>随机种子：固定则输出确定</td>
+                        <td>整数</td>
+                        <td>随机</td>
+                    </tr>
+                    <tr>
+                        <td>ADAPTER</td>
+                        <td>LoRA 适配器（微调）</td>
+                        <td>路径</td>
+                        <td>-</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="card" style="margin-bottom: 1.5rem;">
+                <h3>🚀 最优化利用建议</h3>
+                <div class="grid">
+                    <div>
+                        <h4>💬 对话助手</h4>
+                        <pre>FROM qwen3
 PARAMETER temperature 0.7
 PARAMETER top_p 0.9
-
+PARAMETER num_ctx 4096
 SYSTEM """
-你是一个专业的技术文档助手。
-用简洁清晰的语言回答技术问题。
+你是一个专业、友好的AI助手。
+回答要简洁明了，不超过200字。
 """</pre>
+                    </div>
+                    <div>
+                        <h4>💻 代码专家</h4>
+                        <pre>FROM qwen3-coder-next
+PARAMETER temperature 0.3
+PARAMETER top_k 20
+PARAMETER num_ctx 8192
+SYSTEM """
+你是资深程序员，精通多种语言。
+代码要规范、注释清晰、考虑性能。
+"""</pre>
+                    </div>
+                    <div>
+                        <h4>📚 知识库问答</h4>
+                        <pre>FROM qwen3
+PARAMETER temperature 0.2
+PARAMETER top_p 0.8
+PARAMETER num_ctx 8192
+SYSTEM """
+基于以下知识库回答问题：
+[这里可以内置常见问答]
+只回答知识库相关的问题。
+"""</pre>
+                    </div>
+                    <div>
+                        <h4>🎨 创意写作</h4>
+                        <pre>FROM qwen3
+PARAMETER temperature 1.2
+PARAMETER top_p 0.95
+PARAMETER repeat_penalty 1.2
+SYSTEM """
+你是创意作家，擅长各种文体。
+发挥你的想象力，创造精彩内容。
+"""</pre>
+                    </div>
+                </div>
             </div>
-            <div class="card" style="margin-top:1rem">
-                <h3>加载自定义模型</h3>
-                <pre>ollama create my-assistant -f ./Modelfile
-ollama run my-assistant</pre>
+
+            <div class="card" style="margin-bottom: 1.5rem;">
+                <h3>🔧 常用命令</h3>
+                <pre># 1. 创建 Modelfile
+vim ./my-model
+
+# 2. 从 Modelfile 创建模型
+ollama create my-assistant -f ./my-model
+
+# 3. 查看模型信息
+ollama show my-assistant
+
+# 4. 运行自定义模型
+ollama run my-assistant
+
+# 5. 导出模型文件
+ollama show my-assistant --modelfile
+
+# 6. 复制模型
+ollama cp my-assistant my-backup</pre>
+            </div>
+
+            <div class="diagram">
+                <div class="diagram-title">Modelfile 工作流程</div>
+                <div class="flowchart">
+                    <div class="flow-node start">编写 Modelfile</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-node process">ollama create</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-node process">模型实例化</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-node process">参数固化</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-node end">ollama run</div>
+                </div>
             </div>
         </div>
     </section>
+
+    <script src="js/main.js"></script>
 
     <section class="section">
         <div class="container">
