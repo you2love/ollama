@@ -38,14 +38,19 @@
                     <th>说明</th>
                 </tr>
                 <tr>
+                    <td>/api/chat</td>
+                    <td>POST</td>
+                    <td>对话模式（流式输出）推荐</td>
+                </tr>
+                <tr>
                     <td>/api/generate</td>
                     <td>POST</td>
                     <td>生成文本（完整回答）</td>
                 </tr>
                 <tr>
-                    <td>/api/chat</td>
+                    <td>/api/embeddings</td>
                     <td>POST</td>
-                    <td>对话模式（流式输出）</td>
+                    <td>向量嵌入（需 embedding 模型）</td>
                 </tr>
                 <tr>
                     <td>/api/tags</td>
@@ -63,13 +68,13 @@
 
     <section class="section">
         <div class="container">
-            <h2 class="section-title">💬 对话 API (chat)</h2>
+            <h2 class="section-title">💬 对话 API (chat) 推荐</h2>
             <div class="card">
-                <h3>请求示例</h3>
+                <h3>基础请求示例</h3>
                 <pre>curl -X POST http://localhost:11434/api/chat \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "llama3.2",
+    "model": "qwen3",
     "messages": [
       {"role": "user", "content": "什么是 Ollama?"}
     ],
@@ -79,30 +84,75 @@
             <div class="card" style="margin-top:1rem">
                 <h3>响应示例</h3>
                 <pre>{
-  "model": "llama3.2",
+  "model": "qwen3",
   "message": {
     "role": "assistant",
     "content": "Ollama 是一个开源的大语言模型运行平台..."
   },
-  "done": true
-}</pre>
+  "done": true,
+  "context": [...],
+  "total_duration": 1234567890
+}'</pre>
             </div>
         </div>
     </section>
 
     <section class="section">
         <div class="container">
-            <h2 class="section-title">⚡ 流式响应</h2>
+            <h2 class="section-title">⚡ 流式响应 + 思考模式</h2>
             <div class="card">
-                <h3>流式调用</h3>
+                <h3>流式调用 + 思考模式</h3>
                 <pre>curl -X POST http://localhost:11434/api/chat \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "llama3.2",
-    "messages": [{"role": "user", "content": "讲个笑话"}],
-    "stream": true
+    "model": "qwen3",
+    "messages": [{"role": "user", "content": "解释一下量子计算"}],
+    "stream": true,
+    "options": {
+      "temperature": 0.7,
+      "num_ctx": 4096
+    }
   }'</pre>
                 <p style="margin-top:1rem">设置 <code>stream: true</code> 开启 SSE 流式输出，逐字返回结果。</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">📐 向量嵌入 API</h2>
+            <div class="card">
+                <h3>获取文本向量</h3>
+                <pre>curl -X POST http://localhost:11434/api/embeddings \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "qwen3-embedding",
+    "prompt": "要嵌入的文本"
+  }'</pre>
+                <p style="margin-top:1rem">返回 1024 维向量，可用于语义搜索、RAG 等场景。</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">🖼️ 视觉理解 API</h2>
+            <div class="card">
+                <h3>图片理解</h3>
+                <pre>curl -X POST http://localhost:11434/api/chat \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "qwen3-vl",
+    "messages": [
+      {
+        "role": "user",
+        "content": [
+          {"type": "image", "url": "https://example.com/image.jpg"},
+          {"type": "text", "text": "描述这张图片"}
+        ]
+      }
+    ]
+  }'</pre>
             </div>
         </div>
     </section>
@@ -116,11 +166,11 @@
                     <pre>pip install ollama</pre>
                 </div>
                 <div class="card">
-                    <h3>基本使用</h3>
+                    <h3>基础使用</h3>
                     <pre>import ollama
 
 response = ollama.chat(
-    model='llama3.2',
+    model='qwen3',
     messages=[{'role': 'user', 'content': '你好'}]
 )
 print(response['message']['content'])</pre>
@@ -130,11 +180,21 @@ print(response['message']['content'])</pre>
                     <pre>import ollama
 
 for chunk in ollama.chat(
-    model='llama3.2',
+    model='qwen3',
     messages=[{'role': 'user', 'content': '继续'}],
     stream=True
 ):
     print(chunk['message']['content'], end='')</pre>
+                </div>
+                <div class="card">
+                    <h3>向量嵌入</h3>
+                    <pre>import ollama
+
+embedding = ollama.embeddings(
+    model='qwen3-embedding',
+    prompt='要嵌入的文本'
+)
+print(embedding['embedding'])</pre>
                 </div>
             </div>
         </div>
@@ -152,18 +212,18 @@ for chunk in ollama.chat(
                     </div>
                     <div class="sequence-row">
                         <div class="sequence-label">Ollama</div>
-                        <div class="sequence-line"><div class="sequence-dot" style="background:#11998e;left:30%"></div></div>
+                        <div class="sequence-line"><div class="sequence-dot" style="background:#11998e;left:25%"></div></div>
                         <div class="sequence-msg">验证请求</div>
                     </div>
                     <div class="sequence-row">
                         <div class="sequence-label">Model</div>
                         <div class="sequence-line"><div class="sequence-dot" style="background:#eb3349;left:50%"></div></div>
-                        <div class="sequence-msg">LLM 推理</div>
+                        <div class="sequence-msg">LLM 推理 (GPU)</div>
                     </div>
                     <div class="sequence-row">
                         <div class="sequence-label">Ollama</div>
-                        <div class="sequence-line"><div class="sequence-dot" style="background:#f093fb;left:70%"></div></div>
-                        <div class="sequence-msg">返回结果</div>
+                        <div class="sequence-line"><div class="sequence-dot" style="background:#f093fb;left:75%"></div></div>
+                        <div class="sequence-msg">流式返回</div>
                     </div>
                     <div class="sequence-row">
                         <div class="sequence-label">Client</div>
@@ -184,7 +244,7 @@ for chunk in ollama.chat(
 const ollama = new Ollama({ host: 'http://localhost:11434' })
 
 const response = await ollama.chat({
-    model: 'llama3.2',
+    model: 'qwen3',
     messages: [{ role: 'user', content: 'Hello' }]
 })
 console.log(response.message.content)</pre>
@@ -192,11 +252,6 @@ console.log(response.message.content)</pre>
         </div>
     </section>
 
-    <footer>
-        <div class="container">
-            <p>© 2024 Ollama 知识手册</p>
-        </div>
-    </footer>
     <script src="js/main.js"></script>
 </body>
 </html>

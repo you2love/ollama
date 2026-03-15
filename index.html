@@ -32,37 +32,37 @@
 
     <section id="start" class="section">
         <div class="container">
-            <h2 class="section-title">📚 内容概览</h2>
+            <h2 class="section-title">📚 新版内容</h2>
             <div class="grid">
                 <div class="card">
-                    <div class="card-icon">📦</div>
-                    <h3>快速开始</h3>
-                    <p>了解 Ollama 是什么，核心概念，以及如何快速运行第一个模型。</p>
+                    <div class="card-icon">🔥</div>
+                    <h3>Qwen3 系列</h3>
+                    <p>阿里最新开源，支持视觉、代码、嵌入，2.1M+ 下载量，领跑开源模型榜单。</p>
                 </div>
                 <div class="card">
-                    <div class="card-icon">⚙️</div>
-                    <h3>安装指南</h3>
-                    <p>macOS、Linux、Windows 各平台安装步骤，配置优化。</p>
+                    <div class="card-icon">🖼️</div>
+                    <h3>视觉理解</h3>
+                    <p>QWEN3-VL、GLM-OCR、DeepSeek-OCR 等原生多模态模型，支持图片理解与 OCR。</p>
                 </div>
                 <div class="card">
                     <div class="card-icon">🧠</div>
-                    <h3>模型管理</h3>
-                    <p>模型下载、列表、删除、自定义模型文件 (Modelfile)。</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">🔌</div>
-                    <h3>API 使用</h3>
-                    <p>REST API 详解、Python/Node.js SDK、接口调用示例。</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">💻</div>
-                    <h3>实战案例</h3>
-                    <p>企业知识库、代码助手、智能客服等真实场景实践。</p>
+                    <h3>思考模式</h3>
+                    <p>LFM2.5-Thinking、Qwen3.5 等支持深度推理，适合复杂问题分析与代码生成。</p>
                 </div>
                 <div class="card">
                     <div class="card-icon">🔧</div>
-                    <h3>性能优化</h3>
-                    <p>GPU 加速、内存优化、多模型部署策略。</p>
+                    <h3>工具调用</h3>
+                    <p>Nemotron-3、GLM-4.7-FLASH 等支持 Function Calling，可集成外部 API。</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">⚡</div>
+                    <h3>MoE 架构</h3>
+                    <p>Nemotron-3-Super (120B MoE)、LFM2 等专家混合模型，性能更强。</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🌏</div>
+                    <h3>中文优化</h3>
+                    <p>Qwen3、GLM-5、MiniMax-M2.5 等中文能力最强，适合国内开发者。</p>
                 </div>
             </div>
         </div>
@@ -75,13 +75,13 @@
                 <div class="flowchart">
                     <div class="flow-node start">用户请求</div>
                     <span class="flow-arrow">→</span>
-                    <div class="flow-node process">Ollama 服务</div>
+                    <div class="flow-node process">Ollama Server</div>
                     <span class="flow-arrow">→</span>
-                    <div class="flow-node process">加载模型</div>
+                    <div class="flow-node process">模型加载</div>
                     <span class="flow-arrow">→</span>
-                    <div class="flow-node process">LLM 推理</div>
+                    <div class="flow-node process">GPU 推理</div>
                     <span class="flow-arrow">→</span>
-                    <div class="flow-node end">返回结果</div>
+                    <div class="flow-node end">流式响应</div>
                 </div>
             </div>
         </div>
@@ -89,36 +89,84 @@
 
     <section class="section">
         <div class="container">
-            <h2 class="section-title">⚡ 快速命令一览</h2>
+            <h2 class="section-title">⚡ 热门命令</h2>
             <div class="grid">
                 <div class="card">
-                    <h3>�_DOWNLOAD 下载模型</h3>
-                    <pre>ollama pull llama3.2
-ollama pull qwen2.5</pre>
+                    <h3>📦 下载最新模型</h3>
+                    <pre>ollama pull qwen3         # 基础模型
+ollama pull qwen3:8b     # 8B 参数
+ollama pull qwen3-vl     # 视觉模型
+ollama pull qwen3-embedding</pre>
                 </div>
                 <div class="card">
                     <h3>▶️ 运行模型</h3>
-                    <pre>ollama run llama3.2
-ollama run qwen2.5</pre>
+                    <pre>ollama run qwen3
+ollama run qwen3-vl
+ollama run nemotron-nano</pre>
                 </div>
                 <div class="card">
-                    <h3>📋 模型列表</h3>
-                    <pre>ollama list
-ollama ps</pre>
+                    <h3>🧠 思考模式</h3>
+                    <pre>ollama run qwen3:8b
+# 使用 /Think 开启深度思考</pre>
                 </div>
                 <div class="card">
-                    <h3>🗑️ 删除模型</h3>
-                    <pre>ollama rm llama3.2</pre>
+                    <h3>🖼️ 视觉理解</h3>
+                    <pre>ollama run qwen3-vl
+# 上传图片进行理解</pre>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer>
+    <section class="section">
         <div class="container">
-            <p>© 2024 Ollama 知识手册 | 程序员本地大模型部署指南</p>
+            <h2 class="section-title">🏆 最热门模型 TOP 5</h2>
+            <table>
+                <tr>
+                    <th>排名</th>
+                    <th>模型</th>
+                    <th>参数量</th>
+                    <th>下载量</th>
+                    <th>特点</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>QWEN3-VL</td>
+                    <td>2B - 235B</td>
+                    <td>2.1M</td>
+                    <td>视觉+推理</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>QWEN3.5</td>
+                    <td>0.8B - 122B</td>
+                    <td>1.8M</td>
+                    <td>通用对话</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Qwen3-Embedding</td>
+                    <td>0.6B - 8B</td>
+                    <td>1.2M</td>
+                    <td>向量嵌入</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>LFM2.5-Thinking</td>
+                    <td>1.2B</td>
+                    <td>971K</td>
+                    <td>深度推理</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>LFM2</td>
+                    <td>24B</td>
+                    <td>949K</td>
+                    <td>MoE 架构</td>
+                </tr>
+            </table>
         </div>
-    </footer>
+    </section>
 
     <script src="js/main.js"></script>
 </body>

@@ -30,7 +30,7 @@
 
     <section class="section">
         <div class="container">
-            <h2 class="section-title">🧠 场景一：本地知识库问答</h2>
+            <h2 class="section-title">🧠 场景一：RAG 知识库问答</h2>
             <div class="diagram">
                 <div class="diagram-title">RAG 架构流程</div>
                 <div class="flowchart">
@@ -50,24 +50,28 @@
                 </div>
             </div>
             <div class="card">
-                <h3>核心代码</h3>
+                <h3>核心代码 RAG 实现</h3>
                 <pre>import ollama
 
 def rag_query(query, docs):
-    # 1. 将查询向量化（需 embedding 模型）
-    embed = ollama.embeddings(model='nomic-embed-text', prompt=query)
+    # 1. 向量化查询 (使用 qwen3-embedding)
+    embed = ollama.embeddings(
+        model='qwen3-embedding',
+        prompt=query
+    )
     
-    # 2. 向量相似度检索（简化版）
-    relevant_docs = retrieve_similar(embed, docs)
+    # 2. 向量相似度检索
+    relevant_docs = retrieve_similar(embed['embedding'], docs)
     
     # 3. 构建上下文
     context = "\n\n".join(relevant_docs)
     prompt = f"基于以下资料回答问题：\n\n{context}\n\n问题：{query}"
     
-    # 4. LLM 生成
-    response = ollama.chat(model='llama3.2', messages=[
-        {'role': 'user', 'content': prompt}
-    ])
+    # 4. LLM 生成 (使用 qwen3)
+    response = ollama.chat(
+        model='qwen3',
+        messages=[{'role': 'user', 'content': prompt}]
+    )
     return response['message']['content']</pre>
             </div>
         </div>
@@ -75,120 +79,135 @@ def rag_query(query, docs):
 
     <section class="section">
         <div class="container">
-            <h2 class="section-title">💻 场景二：代码助手</h2>
+            <h2 class="section-title">💻 场景二：代码助手 + OCR</h2>
             <div class="card">
-                <h3>Python 代码审查</h3>
+                <h3>图片代码识别 + 审查</h3>
                 <pre>import ollama
 
-def review_code(code):
+def review_screenshot(image_path):
+    # 使用 qwen3-vl 理解截图
     response = ollama.chat(
-        model='llama3.2',
+        model='qwen3-vl',
         messages=[{
             'role': 'user',
-            'content': f'''请审查以下 Python 代码，指出问题并提供改进建议：
-            
-```{python}
-{code}
-```
-
-审查要点：
-1. 代码规范
-2. 潜在 bug
-3. 性能优化
-4. 安全问题'''
+            'content': [
+                {'type': 'image', 'image': image_path},
+                {'type': 'text', 'text': '这是代码截图，请识别并审查'}
+            ]
         }]
     )
     return response['message']['content']
 
-# 使用示例
-code = '''
-def get_user(id):
-    return db.query(f"SELECT * FROM users WHERE id = {id}")
-'''
-print(review_code(code))</pre>
+# 使用
+result = review_screenshot('code.png')
+print(result)</pre>
             </div>
         </div>
     </section>
 
     <section class="section">
         <div class="container">
-            <h2 class="section-title">🤖 场景三：智能客服机器人</h2>
+            <h2 class="section-title">🤖 场景三：多模态智能客服</h2>
             <div class="diagram">
-                <div class="diagram-title">对话系统架构</div>
+                <div class="diagram-title">多模态对话系统</div>
                 <div class="flowchart">
-                    <div class="flow-node start">用户</div>
-                    <span class="flow-arrow">→</span>
-                    <div class="flow-node process">API 网关</div>
+                    <div class="flow-node start">用户(文本/图片)</div>
                     <span class="flow-arrow">→</span>
                     <div class="flow-node process">意图识别</div>
                     <span class="flow-arrow">→</span>
-                    <div class="flow-node decision">匹配?</div>
+                    <div class="flow-node decision">类型?</div>
                     <span class="flow-arrow">→</span>
-                    <div class="flow-node process">知识库</div>
+                    <div class="flow-node process">知识库/OCR</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-node process">qwen3-vl</div>
                     <span class="flow-arrow">→</span>
                     <div class="flow-node end">回答</div>
                 </div>
             </div>
             <div class="card">
-                <h3>对话管理实现</h3>
+                <h3>多模态客服实现</h3>
                 <pre>import ollama
 
-class ChatBot:
+class MultiModalChatBot:
     def __init__(self):
-        self.system_prompt = """你是一个客服助手，负责回答用户关于产品的问题。
-        请保持友好、专业，使用户满意。"""
-        self.conversation = [{'role': 'system', 'content': self.system_prompt}]
+        self.model = 'qwen3-vl'
     
-    def chat(self, user_input):
-        self.conversation.append({'role': 'user', 'content': user_input})
+    def chat(self, message, image=None):
+        if image:
+            content = [
+                {'type': 'image', 'image': image},
+                {'type': 'text', 'text': message}
+            ]
+        else:
+            content = message
         
         response = ollama.chat(
-            model='qwen2.5',
-            messages=self.conversation
+            model=self.model,
+            messages=[{'role': 'user', 'content': content}]
         )
-        
-        reply = response['message']['content']
-        self.conversation.append({'role': 'assistant', 'content': reply})
-        return reply
-    
-    def reset(self):
-        self.conversation = [{'role': 'system', 'content': self.system_prompt}]
+        return response['message']['content']
 
-# 使用
-bot = ChatBot()
-while True:
-    user_input = input("你: ")
-    if user_input.lower() in ['exit', 'quit']:
-        break
-    print("助手:", bot.chat(user_input))</pre>
+# 使用 - 支持图片问答
+bot = MultiModalChatBot()
+print(bot.chat("这个商品有什么问题?", "screenshot.png"))</pre>
             </div>
         </div>
     </section>
 
     <section class="section">
         <div class="container">
-            <h2 class="section-title">🚀 场景四：批量文档处理</h2>
+            <h2 class="section-title">⚡ 场景四：思考模式应用</h2>
             <div class="card">
-                <h3>批量摘要生成</h3>
+                <h3>深度推理问题</h3>
+                <pre>import ollama
+
+# 使用 qwen3 的思考模式处理复杂问题
+response = ollama.chat(
+    model='qwen3',
+    messages=[{
+        'role': 'user', 
+        'content': '''请分析以下问题并给出详细推理过程：
+        
+题目：如何设计一个高可用的分布式系统？
+请从架构、容错、性能等方面分析。'''
+    }],
+    options={
+        'temperature': 0.7,
+        'num_ctx': 8192  # 扩展上下文
+    }
+)
+
+print(response['message']['content'])
+# 输出包含详细思考过程</pre>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">🚀 场景五：批量文档处理</h2>
+            <div class="card">
+                <h3>批量摘要 + OCR</h3>
                 <pre>import ollama
 from concurrent.futures import ThreadPoolExecutor
 
-def summarize_document(text):
-    prompt = f"请用 100 字以内概括以下内容：\n\n{text[:1000]}"
+def process_document(doc_path):
+    # OCR 识别 + 摘要
     response = ollama.chat(
-        model='llama3.2',
-        messages=[{'role': 'user', 'content': prompt}]
+        model='qwen3-vl',
+        messages=[{
+            'role': 'user',
+            'content': [
+                {'type': 'image', 'image': doc_path},
+                {'type': 'text', 'text': '提取文字并用100字概括'}
+            ]
+        }]
     )
     return response['message']['content']
 
-def batch_summarize(documents):
-    with ThreadPoolExecutor(max_workers=3) as executor:
-        summaries = list(executor.map(summarize_document, documents))
-    return summaries
-
-# 使用
-docs = [doc1, doc2, doc3, ...]
-results = batch_summarize(docs)</pre>
+# 并行处理
+with ThreadPoolExecutor(max_workers=4) as executor:
+    results = list(executor.map(process_document, documents))</pre>
             </div>
         </div>
     </section>
@@ -209,8 +228,13 @@ results = batch_summarize(docs)</pre>
                 </tr>
                 <tr>
                     <td>模型量化</td>
-                    <td>使用 Q4_0, Q5_1 量化版本</td>
-                    <td>内存减少 50%+</td>
+                    <td>使用 Q4_K, Q5_K 量化版本</td>
+                    <td>内存减少 60%+</td>
+                </tr>
+                <tr>
+                    <td>上下文扩展</td>
+                    <td>num_ctx 设置更大</td>
+                    <td>处理长文档</td>
                 </tr>
                 <tr>
                     <td>批处理</td>
@@ -218,19 +242,14 @@ results = batch_summarize(docs)</pre>
                     <td>吞吐量提升</td>
                 </tr>
                 <tr>
-                    <td>缓存</td>
-                    <td>热门结果缓存</td>
-                    <td>响应时间减少</td>
+                    <td>VL 模型</td>
+                    <td>用 qwen3-vl 替代 OCR+LLM</td>
+                    <td>简化流程</td>
                 </tr>
             </table>
         </div>
     </section>
 
-    <footer>
-        <div class="container">
-            <p>© 2024 Ollama 知识手册</p>
-        </div>
-    </footer>
     <script src="js/main.js"></script>
 </body>
 </html>

@@ -24,7 +24,7 @@
     <section class="hero" style="padding: 2rem 0;">
         <div class="container">
             <h1>🧠 模型管理</h1>
-            <p>模型下载、列表、自定义与部署</p>
+            <p>最新模型下载、列表、自定义与部署</p>
         </div>
     </section>
 
@@ -33,17 +33,38 @@
             <h2 class="section-title">📥 模型下载</h2>
             <div class="grid">
                 <div class="card">
-                    <h3>下载官方模型</h3>
-                    <pre>ollama pull llama3.2        # 最新版
-ollama pull llama3.2:1b   # 指定参数
-ollama pull qwen2.5        # 通义千问
-ollama pull phi3          # 微软小模型
-ollama pull mistral       # 欧洲开源</pre>
+                    <h3>Qwen3 系列 (阿里)</h3>
+                    <pre>ollama pull qwen3           # 基础版
+ollama pull qwen3:8b        # 8B 参数
+ollama pull qwen3:32b       # 32B 参数
+ollama pull qwen3-vl        # 视觉理解
+ollama pull qwen3-coder-next # 代码专用
+ollama pull qwen3-embedding # 向量嵌入</pre>
                 </div>
                 <div class="card">
-                    <h3>查看可用模型</h3>
-                    <pre>ollama list                 # 已下载
-ollama search llama       # 搜索可下载</pre>
+                    <h3>NVIDIA Nemotron</h3>
+                    <pre>ollama pull nemotron-super  # 120B MoE
+ollama pull nemotron-nano   # 30B 轻量</pre>
+                </div>
+                <div class="card">
+                    <h3>智谱 GLM 系列</h3>
+                    <pre>ollama pull glm-4.7-flash   # 快速推理
+ollama pull glm-5          # 40B 强推理
+ollama pull glm-ocr        # OCR 识别</pre>
+                </div>
+                <div class="card">
+                    <h3>月之暗面 Kimi</h3>
+                    <pre>ollama pull kimi-k2.5       # 多模态代理</pre>
+                </div>
+                <div class="card">
+                    <h3>MiniMax</h3>
+                    <pre>ollama pull minimax-m2.5    # 中文优化</pre>
+                </div>
+                <div class="card">
+                    <h3>Mistral AI</h3>
+                    <pre>ollama pull ministral-3     # 3B-14B
+ollama pull lfm2           # 24B MoE
+ollama pull lfm2.5-thinking # 思考模式</pre>
                 </div>
             </div>
         </div>
@@ -55,35 +76,85 @@ ollama search llama       # 搜索可下载</pre>
             <table>
                 <tr>
                     <th>模型</th>
-                    <th>参数</th>
-                    <th>场景</th>
+                    <th>参数量</th>
+                    <th>下载量</th>
+                    <th>特点</th>
                     <th>推荐配置</th>
                 </tr>
                 <tr>
-                    <td>Llama 3.2</td>
-                    <td>1B/3B</td>
-                    <td>通用对话</td>
+                    <td>QWEN3-VL</td>
+                    <td>2B - 235B</td>
+                    <td>2.1M</td>
+                    <td>视觉+推理</td>
                     <td>≥8GB VRAM</td>
                 </tr>
                 <tr>
-                    <td>Qwen 2.5</td>
-                    <td>0.5B-72B</td>
-                    <td>中文优化</td>
+                    <td>QWEN3.5</td>
+                    <td>0.8B - 122B</td>
+                    <td>1.8M</td>
+                    <td>通用对话</td>
+                    <td>≥16GB VRAM</td>
+                </tr>
+                <td>Nemotron-Super</td>
+                <td>120B MoE</td>
+                <td>28.9K</td>
+                <td>工具调用</td>
+                <td>≥24GB VRAM</td>
+                </tr>
+                <tr>
+                    <td>GLM-5</td>
+                    <td>40B 活跃</td>
+                    <td>109K</td>
+                    <td>强推理</td>
                     <td>≥16GB VRAM</td>
                 </tr>
                 <tr>
-                    <td>Phi-3</td>
-                    <td>3.8B</td>
-                    <td>轻量部署</td>
-                    <td>≥4GB VRAM</td>
+                    <td>Kimi-K2.5</td>
+                    <td>多模态</td>
+                    <td>151K</td>
+                    <td>原生代理</td>
+                    <td>≥12GB VRAM</td>
                 </tr>
                 <tr>
-                    <td>Mistral</td>
-                    <td>7B</td>
-                    <td>代码任务</td>
-                    <td>≥8GB VRAM</td>
+                    <td>LFM2.5-Thinking</td>
+                    <td>1.2B</td>
+                    <td>971K</td>
+                    <td>深度思考</td>
+                    <td>≥4GB VRAM</td>
                 </tr>
             </table>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">🏷️ 按功能分类模型</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>🖼️ 视觉理解</h3>
+                    <pre>ollama pull qwen3-vl
+ollama pull glm-ocr
+ollama pull deepseek-ocr
+ollama pull translategemma</pre>
+                </div>
+                <div class="card">
+                    <h3>🧠 思考/推理</h3>
+                    <pre>ollama pull qwen3.5
+ollama pull lfm2.5-thinking
+ollama pull glm-4.7-flash</pre>
+                </div>
+                <div class="card">
+                    <h3>🔧 工具调用</h3>
+                    <pre>ollama pull nemotron-super
+ollama pull qwen3-coder-next
+ollama pull glm-4.7-flash
+ollama pull granite4</pre>
+                </div>
+                <div class="card">
+                    <h3>📐 向量嵌入</h3>
+                    <pre>ollama pull qwen3-embedding</pre>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -93,7 +164,7 @@ ollama search llama       # 搜索可下载</pre>
             <div class="card">
                 <h3>创建自定义提示词</h3>
                 <pre># 创建 Modelfile
-FROM llama3.2
+FROM qwen3
 
 PARAMETER temperature 0.7
 PARAMETER top_p 0.9
@@ -119,12 +190,17 @@ ollama run my-assistant</pre>
                     <h3>查看与运行</h3>
                     <pre>ollama list        # 已下载列表
 ollama ps          # 运行中的模型
-ollama run llama3.2</pre>
+ollama run qwen3</pre>
                 </div>
                 <div class="card">
                     <h3>删除与复制</h3>
-                    <pre>ollama rm llama3.2         # 删除
-ollama cp llama3.2 my-copy  # 复制</pre>
+                    <pre>ollama rm qwen3           # 删除
+ollama cp qwen3 my-copy   # 复制</pre>
+                </div>
+                <div class="card">
+                    <h3>搜索模型</h3>
+                    <pre>ollama search qwen      # 搜索可下载
+ollama search glm        # 搜索 GLM 系列</pre>
                 </div>
             </div>
         </div>
@@ -138,21 +214,21 @@ ollama cp llama3.2 my-copy  # 复制</pre>
                     <div class="sequence-row">
                         <div class="sequence-label">Client</div>
                         <div class="sequence-line"><div class="sequence-dot" style="background:#667eea;left:0"></div></div>
-                        <div class="sequence-msg">ollama run llama3.2</div>
+                        <div class="sequence-msg">ollama run qwen3</div>
                     </div>
                     <div class="sequence-row">
                         <div class="sequence-label">Ollama</div>
-                        <div class="sequence-line"><div class="sequence-dot" style="background:#11998e;left:50%"></div></div>
+                        <div class="sequence-line"><div class="sequence-dot" style="background:#11998e;left:30%"></div></div>
                         <div class="sequence-msg">检查模型文件</div>
                     </div>
                     <div class="sequence-row">
                         <div class="sequence-label">Ollama</div>
                         <div class="sequence-line"><div class="sequence-dot" style="background:#eb3349;left:50%"></div></div>
-                        <div class="sequence-msg">加载 GGUF/GGML</div>
+                        <div class="sequence-msg">加载 GGUF/权重</div>
                     </div>
                     <div class="sequence-row">
                         <div class="sequence-label">GPU</div>
-                        <div class="sequence-line"><div class="sequence-dot" style="background:#f093fb;left:80%"></div></div>
+                        <div class="sequence-line"><div class="sequence-dot" style="background:#f093fb;left:70%"></div></div>
                         <div class="sequence-msg">初始化推理引擎</div>
                     </div>
                     <div class="sequence-row">
@@ -165,11 +241,6 @@ ollama cp llama3.2 my-copy  # 复制</pre>
         </div>
     </section>
 
-    <footer>
-        <div class="container">
-            <p>© 2024 Ollama 知识手册</p>
-        </div>
-    </footer>
     <script src="js/main.js"></script>
 </body>
 </html>
