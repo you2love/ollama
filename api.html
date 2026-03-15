@@ -203,6 +203,62 @@ print(embedding['embedding'])</pre>
 
     <section class="section">
         <div class="container">
+            <h2 class="section-title">🔵 Go SDK</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>安装</h3>
+                    <pre>go get github.com/ollama/ollama</pre>
+                </div>
+                <div class="card">
+                    <h3>基础使用</h3>
+                    <pre>package main
+
+import "github.com/ollama/ollama"
+
+func main() {
+    client := ollama.NewClient("http://localhost:11434")
+    
+    resp, err := client.Generate("qwen3", &ollama.GenerateRequest{
+        Prompt: "你好",
+    })
+    if err != nil {
+        panic(err)
+    }
+    fmt.Println(resp.Response)
+}</pre>
+                </div>
+                <div class="card">
+                    <h3>对话 API</h3>
+                    <pre>resp, err := client.Chat("qwen3", &ollama.ChatRequest{
+    Messages: []ollama.Message{
+        {Role: "user", Content: "你好"},
+    },
+})
+if err != nil {
+    panic(err)
+}
+fmt.Println(resp.Message.Content)</pre>
+                </div>
+                <div class="card">
+                    <h3>流式输出</h3>
+                    <pre>stream, err := client.Generate("qwen3", &ollama.GenerateRequest{
+    Prompt:  "讲个故事",
+    Stream:  true,
+})
+for {
+    resp, err := stream.Recv()
+    if err != nil {
+        break
+    }
+    fmt.Print(resp.Response)
+}</pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
             <h2 class="section-title">📡 API 交互时序图</h2>
             <div class="diagram">
                 <div class="sequence-diagram">
